@@ -1,0 +1,37 @@
+# Copyright 2025 Nicolas Spijkerman
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+cmake_minimum_required(VERSION 4.0)
+project(aes256 VERSION 0.1.0 LANGUAGES C)
+
+set(CMAKE_C_STANDARD 11)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
+file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS ${CMAKE_SOURCE_DIR}/src/*.c)
+
+add_executable(${PROJECT_NAME} ${SOURCES})
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_SOURCE_DIR}/include)
+
+if (CMAKE_BUILD_TYPE STREQUAL Debug)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG)
+elseif (CMAKE_BUILD_TYPE STREQUAL Release)
+    target_compile_definitions(${PROJECT_NAME} PRIVATE RELEASE)
+endif ()
+
+message(STATUS "Project: ${PROJECT_NAME}")
+message(STATUS "Version: ${PROJECT_VERSION}")
+message(STATUS "C Standard: ${CMAKE_CXX_STANDARD}")
+message(STATUS "Build Type: ${CMAKE_BUILD_TYPE}")
