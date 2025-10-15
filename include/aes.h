@@ -14,19 +14,17 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#pragma once
 
-#include "aes.h"
-#include "args.h"
-#include "utils.h"
+typedef enum {
+    Encrypt,
+    Decrypt
+} AES_MODE;
 
-int main(const int argc, const char *argv[]) {
-    const aes_config config = parse_args(argc, argv);
-    const char *output_file = argv[4];
+typedef struct {
+    AES_MODE mode;
+    char *key;
+    char *message;
+} aes_config;
 
-    const char *result = aes256(config);
-    write_str_in_file(output_file, result);
-
-    return EXIT_SUCCESS;
-}
+char *aes256(aes_config config);

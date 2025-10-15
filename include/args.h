@@ -14,19 +14,6 @@
  * limitations under the License.
  */
 
-#include <stdio.h>
-#include <stdlib.h>
+#pragma once
 
-#include "aes.h"
-#include "args.h"
-#include "utils.h"
-
-int main(const int argc, const char *argv[]) {
-    const aes_config config = parse_args(argc, argv);
-    const char *output_file = argv[4];
-
-    const char *result = aes256(config);
-    write_str_in_file(output_file, result);
-
-    return EXIT_SUCCESS;
-}
+aes_config parse_args(int argc, const char *argv[]);
