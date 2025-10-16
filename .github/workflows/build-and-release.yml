@@ -35,6 +35,7 @@ jobs:
         if: runner.os == 'Linux' || runner.os == 'macOS'
         shell: bash
         run: |
+          chmod +x ./scripts/build.sh
           ./scripts/build.sh Release
 
       - name: Upload executable artifact
