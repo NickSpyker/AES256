@@ -19,7 +19,7 @@
 
 int read_file(const char *path, char **buffer) {
     if (!path || !buffer) {
-        return EINVAL;
+        return EXIT_FAILURE;
     }
     *buffer = NULL;
 
@@ -65,7 +65,7 @@ int read_file(const char *path, char **buffer) {
 
 int write_file(const char *path, const char *buffer) {
     if (!path || !buffer) {
-        return EINVAL;
+        return EXIT_FAILURE;
     }
 
     FILE *file = fopen(path, "w");
