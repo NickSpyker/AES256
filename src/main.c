@@ -20,32 +20,55 @@
 #include "cli.h"
 #include "aes256.h"
 #include "io.h"
+#include "logger.h"
 
 int main(const int argc, const char *argv[]) {
+#if DEBUG
+    logger_init();
+#endif
+    LOG_TRACE("main", "Logger initialized");
+
     cli_options opts = {0};
-    if (!cli_parse(argc, argv, &opts)) {
+    if (cli_parse(argc, argv, &opts)) {
+        LOG_TRACE("main", "Exiting logger, failed to parse args, main exit code is 1");
+#if DEBUG
+        logger_close();
+#endif
         return EXIT_FAILURE;
     }
 
+    int exit_code = EXIT_SUCCESS;
     switch (opts.cmd) {
         case CMD_HELP:
             cli_print_help();
-            return EXIT_SUCCESS;
+            break;
         case CMD_VERSION:
             cli_print_version();
-            return EXIT_SUCCESS;
+            break;
         case CMD_ENCRYPT:
-            if (!aes256_encrypt(opts.key, opts.msg)) {
-                return EXIT_FAILURE;
+            if (aes256_encrypt(opts.key, opts.msg)) {
+                exit_code = EXIT_FAILURE;
+                break;
             }
-            return write_file(opts.output_file, opts.msg);
+            exit_code = write_file(opts.output_file, opts.msg);
+            break;
         case CMD_DECRYPT:
-            if (!aes256_decrypt(opts.key, opts.msg)) {
-                return EXIT_FAILURE;
+            if (aes256_decrypt(opts.key, opts.msg)) {
+                exit_code = EXIT_FAILURE;
+                break;
             }
-            return write_file(opts.output_file, opts.msg);
+            exit_code = write_file(opts.output_file, opts.msg);
+            break;
         default:
             cli_print_help();
-            return EXIT_FAILURE;
+            exit_code = EXIT_FAILURE;
+            break;
     }
+
+    LOG_TRACE("main", "Exiting logger, main exit code is %d", exit_code);
+#if DEBUG
+    logger_close();
+#endif
+
+    return exit_code;
 }

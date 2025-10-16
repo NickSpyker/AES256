@@ -20,6 +20,7 @@
 
 #include "cli.h"
 #include "io.h"
+#include "logger.h"
 
 void cli_print_help() {
     printf(
@@ -52,6 +53,7 @@ void cli_print_version() {
 int cli_parse(const int argc, const char *argv[], cli_options *opts) {
     if (argc < 2) {
         opts->cmd = CMD_HELP;
+        LOG_INFO("cli_parse", "Command: print help");
         return EXIT_SUCCESS;
     }
 
@@ -60,31 +62,38 @@ int cli_parse(const int argc, const char *argv[], cli_options *opts) {
     if (argc == 2) {
         if (!strcmp(cmd, "-h") || !strcmp(cmd, "--help")) {
             opts->cmd = CMD_HELP;
+            LOG_INFO("cli_parse", "Command: print help");
             return EXIT_SUCCESS;
         }
         if (!strcmp(cmd, "-v") || !strcmp(cmd, "--version")) {
             opts->cmd = CMD_VERSION;
+            LOG_INFO("cli_parse", "Command: print version");
             return EXIT_SUCCESS;
         }
 
         printf("Error: Unknown option '%s'\n", cmd);
         printf("Use -h or --help for usage information\n");
+        LOG_ERROR("cli_parse", "Error: Unknown option '%s'\n", cmd);
         return EXIT_FAILURE;
     }
 
     if (argc != 5) {
         printf("Error: Invalid number of arguments (expected 4, got %d)\n", argc - 1);
         printf("Usage: aes256 <COMMAND> <KEY> <INPUT_FILE> <OUTPUT_FILE>\n");
+        LOG_ERROR("cli_parse", "Error: Invalid number of arguments (expected 4, got %d)\n", argc - 1);
         return EXIT_FAILURE;
     }
 
     if (!strcmp(cmd, "e") || !strcmp(cmd, "encrypt")) {
         opts->cmd = CMD_ENCRYPT;
+        LOG_INFO("cli_parse", "Command: encrypt");
     } else if (!strcmp(cmd, "d") || !strcmp(cmd, "decrypt")) {
         opts->cmd = CMD_DECRYPT;
+        LOG_INFO("cli_parse", "Command: decrypt");
     } else {
         printf("Error: Unknown command '%s'\n", cmd);
         printf("Valid commands are: encrypt (e), decrypt (d)\n");
+        LOG_ERROR("cli_parse", "Error: Unknown command '%s'\n", cmd);
         return EXIT_FAILURE;
     }
 
