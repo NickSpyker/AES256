@@ -7,8 +7,6 @@ on:
       - 'v*.*.*'
   pull_request:
     branches: [ "main" ]
-    tags:
-      - 'v*.*.*'
 
 permissions:
   contents: write
@@ -83,6 +81,5 @@ jobs:
             exit 1
           fi
           for f in "${files[@]}"; do
-            asset_name=$(basename "$f")
-            gh release upload "${{ github.ref_name }}" "$f" --clobber --repo "${{ github.repository }}" --name "$asset_name"
+            gh release upload "${{ github.ref_name }}" "$f" --clobber --repo "${{ github.repository }}"
           done
