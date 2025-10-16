@@ -24,11 +24,11 @@
 void cli_print_help() {
     printf(
         "AES256 - Advanced Encryption Standard 256-bit\n"
-        "A command-line tool for encrypting and decrypting files using AES-256 encryption.\n"
+        "A command-line tool for encrypting and decrypting files using AES-256 encryption\n"
         "\n"
         "USAGE:\n"
         "    aes256 [OPTIONS]\n"
-        "    aes256 <COMMAND> <KEY> <INPUT_FILE> <OUTPUT_FILE>\n"
+        "    aes256 [COMMAND] <KEY> <INPUT_FILE> <OUTPUT_FILE>\n"
         "\n"
         "OPTIONS:\n"
         "    -h, --help       Display this help message and exit\n"
