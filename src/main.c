@@ -17,16 +17,35 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "aes.h"
-#include "args.h"
-#include "utils.h"
+#include "cli.h"
+#include "aes256.h"
+#include "io.h"
 
 int main(const int argc, const char *argv[]) {
-    const aes_config config = parse_args(argc, argv);
-    const char *output_file = argv[4];
+    cli_options opts = {0};
+    if (!cli_parse(argc, argv, &opts)) {
+        return EXIT_FAILURE;
+    }
 
-    const char *result = aes256(config);
-    write_str_in_file(output_file, result);
-
-    return EXIT_SUCCESS;
+    switch (opts.cmd) {
+        case CMD_HELP:
+            cli_print_help();
+            return EXIT_SUCCESS;
+        case CMD_VERSION:
+            cli_print_version();
+            return EXIT_SUCCESS;
+        case CMD_ENCRYPT:
+            if (!aes256_encrypt(opts.key, opts.msg)) {
+                return EXIT_FAILURE;
+            }
+            return write_file(opts.output_file, opts.msg);
+        case CMD_DECRYPT:
+            if (!aes256_decrypt(opts.key, opts.msg)) {
+                return EXIT_FAILURE;
+            }
+            return write_file(opts.output_file, opts.msg);
+        default:
+            cli_print_help();
+            return EXIT_FAILURE;
+    }
 }

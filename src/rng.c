@@ -13,9 +13,3 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-#include "aes.h"
-
-char *aes256(const aes_config config) {
-    return "";
-}

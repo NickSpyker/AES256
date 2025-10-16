@@ -17,33 +17,38 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char *read_file_to_str(const char *path) {
+int read_file(const char *path, char **buffer) {
+    if (!path || !buffer) {
+        return EINVAL;
+    }
+    *buffer = NULL;
+
     FILE *file = fopen(path, "rb");
     if (!file) {
         printf("Error: Failed to open file '%s' for reading\n", path);
         printf("Please check that the file exists and you have read permissions\n");
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
     if (fseek(file, 0, SEEK_END) != 0) {
         fclose(file);
         printf("Error: Failed to seek to end of file '%s'\n", path);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
     const long sz = ftell(file);
     if (sz < 0) {
         fclose(file);
         printf("Error: Failed to determine size of file '%s'\n", path);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
     rewind(file);
 
-    char *buffer = malloc((size_t) sz + 1);
-    if (!buffer) {
+    *buffer = malloc((size_t) sz + 1);
+    if (!*buffer) {
         fclose(file);
         printf("Error: Failed to allocate memory (%ld bytes) for file '%s'\n", sz + 1, path);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
     const size_t size = fread(buffer, 1, (size_t) sz, file);
@@ -51,20 +56,26 @@ char *read_file_to_str(const char *path) {
     if (size != (size_t) sz) {
         free(buffer);
         printf("Error: Failed to read file '%s' (read %zu of %ld bytes)\n", path, size, sz);
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
 
-    buffer[size] = '\0';
-    return buffer;
+    *buffer[size] = '\0';
+    return EXIT_SUCCESS;
 }
 
-void write_str_in_file(const char *path, const char *str) {
-    FILE *fp = fopen(path, "w");
-    if (!fp) {
+int write_file(const char *path, const char *buffer) {
+    if (!path || !buffer) {
+        return EINVAL;
+    }
+
+    FILE *file = fopen(path, "w");
+    if (!file) {
         printf("Error: Failed to open file '%s' for writing\n", path);
         printf("Please check that you have write permissions for this location\n");
-        exit(EXIT_FAILURE);
+        return EXIT_FAILURE;
     }
-    fputs(str, fp);
-    fclose(fp);
+
+    fputs(buffer, file);
+    fclose(file);
+    return EXIT_SUCCESS;
 }

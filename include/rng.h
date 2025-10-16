@@ -15,6 +15,3 @@
  */
 
 #pragma once
-
-char *read_file_to_str(const char *path);
-void write_str_in_file(const char *path, const char *str);

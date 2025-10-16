@@ -16,4 +16,5 @@
 
 #pragma once
 
-aes_config parse_args(int argc, const char *argv[]);
+int aes256_encrypt(char *key, char *message);
+int aes256_decrypt(char *key, char *message);

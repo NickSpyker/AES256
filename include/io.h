@@ -16,15 +16,5 @@
 
 #pragma once
 
-typedef enum {
-    Encrypt,
-    Decrypt
-} AES_MODE;
-
-typedef struct {
-    AES_MODE mode;
-    char *key;
-    char *message;
-} aes_config;
-
-char *aes256(aes_config config);
+int read_file(const char *path, char **buffer);
+int write_file(const char *path, const char *buffer);
