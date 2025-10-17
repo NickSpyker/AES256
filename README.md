@@ -2,6 +2,45 @@
 
 A command-line tool for encrypting and decrypting files using AES-256 encryption.
 
+## Downloads
+
+<table>
+  <tr>
+    <th>Windows</th>
+    <th>Linux</th>
+    <th>MacOS</th>
+  </tr>
+  <tr>
+    <td>
+      <a href="https://github.com/NickSpyker/AES256/releases/download/windows-latest/aes256.exe">
+        aes256.exe binary for Windows (x64)
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/NickSpyker/AES256/releases/download/linux-latest/aes256">
+        aes256 binary for Linux (x64)
+      </a>
+    </td>
+    <td>
+      <a href="https://github.com/NickSpyker/AES256/releases/download/macos-latest/aes256">
+        aes256 binary for macOS (Intel & Apple Silicon)
+      </a>
+    </td>
+  </tr>
+  <tr>
+    <td>
+      <p>Installation:</p>
+      <p>Download aes256.exe and add it to your PATH</p>
+    </td>
+    <td colspan="2">
+      <p>Installation:</p>
+      <p>Download aes256</p>
+      <pre><code>chmod +x aes256
+sudo mv aes256 /usr/local/bin/</code></pre>
+    </td>
+  </tr>
+</table>
+
 ## Usage
 
 ```
