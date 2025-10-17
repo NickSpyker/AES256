@@ -3,8 +3,6 @@ name: Build and Release
 on:
   push:
     branches: [ "main" ]
-    tags:
-      - 'v*.*.*'
   pull_request:
     branches: [ "main" ]
 
@@ -58,28 +56,29 @@ jobs:
         with:
           path: ./artifacts
 
-      - name: Create GitHub Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref_name }}
-          release_name: ${{ github.ref_name }}
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Assets
+      - name: Prepare release assets
         shell: bash
+        run: |
+          mkdir -p release-assets
+          find ./artifacts -type f -name 'aes256*' -exec cp {} release-assets/ \;
+          cd release-assets
+          # Rename files to include OS
+          for os_dir in ../artifacts/aes256-*; do
+            os_name=$(basename "$os_dir" | sed 's/aes256-//')
+            if [ -f "../artifacts/aes256-${os_name}/aes256.exe" ]; then
+              cp "../artifacts/aes256-${os_name}/aes256.exe" "./aes256-${os_name}.exe"
+            elif [ -f "../artifacts/aes256-${os_name}/aes256" ]; then
+              cp "../artifacts/aes256-${os_name}/aes256" "./aes256-${os_name}"
+            fi
+          done
+          ls -lh
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release-assets/*
+          draft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          generate_release_notes: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          set -euo pipefail
-          mapfile -t files < <(find ./artifacts -type f -name 'aes256*' -maxdepth 3)
-          if [ ${#files[@]} -eq 0 ]; then
-            echo "No executable files found to upload" >&2
-            exit 1
-          fi
-          for f in "${files[@]}"; do
-            gh release upload "${{ github.ref_name }}" "$f" --clobber --repo "${{ github.repository }}"
-          done
