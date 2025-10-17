@@ -46,51 +46,127 @@ jobs:
           if-no-files-found: error
           compression-level: 0
 
-  release:
-    name: Publish Release
+  release-windows:
+    name: Release Windows
     needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Create or update "latest" tag
+      - name: Create or update "windows-latest" tag
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git tag -f latest
-          git push origin latest --force
+          git tag -f windows-latest
+          git push origin windows-latest --force
 
-      - name: Download artifacts
+      - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          path: ./artifacts
+          name: aes256-Windows
+          path: ./windows-release
 
-      - name: Prepare release assets
-        shell: bash
-        run: |
-          mkdir -p release-assets
-          find ./artifacts -type f -name 'aes256*' -exec cp {} release-assets/ \;
-          cd release-assets
-          # Rename files to include OS
-          for os_dir in ../artifacts/aes256-*; do
-            os_name=$(basename "$os_dir" | sed 's/aes256-//')
-            if [ -f "../artifacts/aes256-${os_name}/aes256.exe" ]; then
-              cp "../artifacts/aes256-${os_name}/aes256.exe" "./aes256-${os_name}.exe"
-            elif [ -f "../artifacts/aes256-${os_name}/aes256" ]; then
-              cp "../artifacts/aes256-${os_name}/aes256" "./aes256-${os_name}"
-            fi
-          done
-          ls -lh
-
-      - name: Create GitHub Release
+      - name: Create Windows Release
         uses: softprops/action-gh-release@v2
         with:
-          tag_name: latest
-          files: release-assets/*
+          tag_name: windows-latest
+          name: Latest Windows Release
+          files: windows-release/aes256.exe
           draft: false
           prerelease: false
-          generate_release_notes: true
-          make_latest: true
+          body: |
+            ## Windows Release
+            
+            AES256 binary for Windows (x64)
+            
+            **Installation:** Download `aes256.exe` and add it to your PATH
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-linux:
+    name: Release Linux
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create or update "linux-latest" tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f linux-latest
+          git push origin linux-latest --force
+
+      - name: Download Linux artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: aes256-Linux
+          path: ./linux-release
+
+      - name: Create Linux Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: linux-latest
+          name: Latest Linux Release
+          files: linux-release/aes256
+          draft: false
+          prerelease: false
+          body: |
+            ## Linux Release
+            
+            AES256 binary for Linux (x64)
+            
+            **Installation:**
+            ```bash
+            chmod +x aes256
+            sudo mv aes256 /usr/local/bin/
+            ```
+          make_latest: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  release-macos:
+    name: Release macOS
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Create or update "macos-latest" tag
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git tag -f macos-latest
+          git push origin macos-latest --force
+
+      - name: Download macOS artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: aes256-macOS
+          path: ./macos-release
+
+      - name: Create macOS Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: macos-latest
+          name: Latest macOS Release
+          files: macos-release/aes256
+          draft: false
+          prerelease: false
+          body: |
+            ## macOS Release
+            
+            AES256 binary for macOS (Intel & Apple Silicon)
+            
+            **Installation:**
+            ```bash
+            chmod +x aes256
+            sudo mv aes256 /usr/local/bin/
+            ```
+          make_latest: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
