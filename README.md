@@ -29,11 +29,11 @@ A command-line tool for encrypting and decrypting files using AES-256 encryption
   </tr>
   <tr>
     <td>
-      <p>Installation:</p>
+      <p style="font-weight: bold;">Installation:</p>
       <p>Download aes256.exe and add it to your PATH</p>
     </td>
     <td colspan="2">
-      <p>Installation:</p>
+      <p style="font-weight: bold;">Installation:</p>
       <p>Download aes256</p>
       <pre><code>chmod +x aes256
 sudo mv aes256 /usr/local/bin/</code></pre>
@@ -44,7 +44,7 @@ sudo mv aes256 /usr/local/bin/</code></pre>
 ## Usage
 
 ```
-aes256 [OPTIONS]
+aes256 [OPTION]
 ```
 
 or

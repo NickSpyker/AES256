@@ -28,7 +28,7 @@ void cli_print_help() {
         "A command-line tool for encrypting and decrypting files using AES-256 encryption\n"
         "\n"
         "USAGE:\n"
-        "    aes256 [OPTIONS]\n"
+        "    aes256 [OPTION]\n"
         "    aes256 [COMMAND] <KEY> <INPUT_FILE> <OUTPUT_FILE>\n"
         "\n"
         "OPTIONS:\n"
