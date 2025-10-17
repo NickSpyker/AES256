@@ -71,7 +71,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: windows-latest
-          name: Latest Windows Release
+          name: Windows
           files: windows-release/aes256.exe
           draft: false
           prerelease: false
@@ -110,7 +110,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: linux-latest
-          name: Latest Linux Release
+          name: Linux
           files: linux-release/aes256
           draft: false
           prerelease: false
@@ -153,7 +153,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: macos-latest
-          name: Latest macOS Release
+          name: MacOS
           files: macos-release/aes256
           draft: false
           prerelease: false
